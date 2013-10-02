@@ -23,6 +23,7 @@ ISONAME='FreeBSD-9.1-RELEASE-amd64-dvd1.iso'
 
 dlv=`/sbin/sysctl -n vfs.nfs.diskless_valid 2> /dev/null`
 if [ ${dlv:=0} -eq 0 ]; then
+	echo "+++ Not running diskless, stopping ..."
 	exit -1;
 fi
 
@@ -56,12 +57,14 @@ cp /tmp/zpool.cache /mnt/boot/zfs
 
 mdno=`/sbin/mdconfig -f /usr/local/dist/${ISONAME}`
 if [ $? -ne 0 ]; then
-	echo "mdconfig failed"; exit 1
+	echo "+++ mdconfig failed"
+	exit -1
 fi
 mkdir -p /tmp/mnt
 /sbin/mount -r -t cd9660 /dev/${mdno} /tmp/mnt
 if [ $? -ne 0 ]; then
-	echo "mount failed"; exit 1
+	echo "+++ mount failed"
+	exit -1
 fi
 
 ########################
@@ -127,15 +130,10 @@ tzsetup -C /mnt $CONT/$CITY
 zfs create -V 1G -o org.freebsd:swap=on -o checksum=off -o sync=disabled -o primarycache=none -o secondarycache=none sys/swap
 echo "/dev/zvol/sys/swap none swap sw 0 0" >>/mnt/etc/fstab
 
-#############################################################
-# Unmount newly installed root and set mount type to legacy #
-#############################################################
+########################################################################
+# Unmount newly installed root and set mount type to legacy and reboot #
+########################################################################
 
 zfs umount -a
 zfs set mountpoint=legacy sys/ROOT/default
-
-##############
-# And reboot #
-##############
-
 reboot

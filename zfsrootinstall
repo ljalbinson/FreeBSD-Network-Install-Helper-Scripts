@@ -1,7 +1,4 @@
 #!/bin/sh
-#
-# $FreeBSD: sysutils/zfsrootinstall/files/zfsrootinstall.in 300897 2012-07-14 14:29:18Z beat $
-#
 
 # PROVIDE: zfsrootinstall
 # REQUIRE: LOGIN sshd cron securelevel msgs syscons inetd dhclient bgfsck mail natd ypxfrd ypupdated
