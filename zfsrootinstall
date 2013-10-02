@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# $FreeBSD: sysutils/zfsrootinstall/files/zfsrootinstall.in 300897 2012-07-14 14:29:18Z beat $
+#
+
+# PROVIDE: zfsrootinstall
+# REQUIRE: LOGIN sshd cron securelevel msgs syscons inetd dhclient bgfsck mail natd ypxfrd ypupdated
+
+#
+# Add the following line to /etc/rc.conf to enable the zfsrootinstall to run
+#
+# zfsrootinstall_enable="YES"
+
+. /etc/rc.subr
+
+name="zfsrootinstall"
+rcvar=zfsrootinstall_enable
+
+command="/usr/local/sbin/zfsrootinstall.sh"
+
+load_rc_config "$name"
+run_rc_command "$1"
